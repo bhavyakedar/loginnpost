@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LoginNPost | Login Page</title>
+</head>
+<script>
+    async function loginUserClick(){
+        password = document.getElementById("password").value;
+        username = document.getElementById("username").value;
+
+        var data = {
+            "password":password,
+            "username":username
+        }
+        console.log(data)
+        var output = await fetch('http://localhost:8888/loginPage',{
+            method:'POST', headers:{
+                'Content-type': 'application/json'
+            },
+            body:JSON.stringify(data)
+        }).then(data=>data.json()).then(data=>{
+            console.log(data);
+            return data;
+        });
+        console.log(output);
+
+        document.getElementById("loginstatusmsg").innerHTML = output.loginstatusmsg;
+    }
+</script>
+<body>
+Username : <input type="text" id="username" maxlength="30" minlength="1"/><br>
+Password : <input type="password" id="password" maxlength="30" minlength="8"/><br>
+<button id="loginUserButton" onclick="loginUserClick()">Login</button>
+<a href="/createUser"><button id="createUserPageButton">Create New User</button></a>
+<a href="/comments"><button id="commentsPageButton">Comments Page</button></a><br>
+
+<span id="loginstatusmsg"></span>
+</body>
+</html>

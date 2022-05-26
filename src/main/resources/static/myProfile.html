@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LoginNPost | My Profile</title>
+</head>
+<script>
+    async function deleteAccount(){
+        var output = await fetch('http://localhost:8888/deleteAccount',{
+            method:'GET', headers:{
+                'Content-type' : 'application/json'
+            }
+        });
+        window.location.replace('/loginPage');
+    }
+    async function myProfileData(){
+        var output = await fetch('http://localhost:8888/myProfileData',{
+            method:'GET', headers:{
+                'Content-type' : 'application/json'
+            }
+        }).then(data=>data.json()).then(data=>{
+            console.log(data);
+            return data;
+        });
+        console.log(output);
+        document.getElementById("name").innerText = output.name;
+        document.getElementById("username").innerText = output.username;
+        document.getElementById("email").innerText = output.email;
+        document.getElementById("createdAt").innerText = output.userCreatedAt;
+    }
+    async function changeName(){
+        name = document.getElementById("changeName").value;
+
+        var data = {
+            "name":name,
+        }
+
+        var output = await fetch('http://localhost:8888/changeName',{
+            method:'POST', headers:{
+                'Content-type': 'application/json'
+            },
+            body:JSON.stringify(data)
+        }).then(data=>data.json()).then(data=>{
+            console.log(data);
+            return data;
+        });
+        console.log(output);
+        myProfileData();
+    }
+    myProfileData();
+</script>
+<body>
+<h3>
+    First Name : <span id="name"></span><br>
+    <input type="text" id="changeName"/><button id="changeNameButton" onclick="changeName()">Change Name</button><br>
+    Username : <span id="username"></span><br>
+    Email : <span id="email"></span><br>
+    Joined LoginNPost At : <span id="createdAt"></span><br>
+    <a href="/comments"><button id="commentsPageButton">Back to Comments Page</button></a>
+    <button id="deleteAccountButton" onclick="deleteAccount()">Delete Account</button>
+</h3>
+</body>
+</html>

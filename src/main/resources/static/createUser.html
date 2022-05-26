@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LoginNPost |  Create User</title>
+</head>
+<script>
+    async function createUserClick(){
+        name = document.getElementById("name").value;
+        email = document.getElementById("email").value;
+        password = document.getElementById("password").value;
+        username = document.getElementById("username").value;
+
+        var data = {
+            "name":name,
+            "email":email,
+            "password":password,
+            "username":username
+        }
+
+        var output = await fetch('http://localhost:8888/createUser',{
+            method:'POST', headers:{
+                'Content-type': 'application/json'
+            },
+            body:JSON.stringify(data)
+        }).then(data=>data.json()).then(data=>{
+            console.log(data);
+            return data;
+        });
+        console.log(output);
+
+        document.getElementById("usernameerror").innerText = output.usernameError;
+        document.getElementById("emailerror").innerText = output.emailerror;
+        document.getElementById("usercreatedmsg").innerText = output.usercreatedmsg;
+    }
+</script>
+<body>
+<div name="createUserForm">
+    Name : <input id="name" type="text" name="name" maxlength="30" minlength="1" /><br>
+    Username : <input id="username" type="text" name="username" maxlength="30" minlength="1" />
+    <span style="color:red" id="usernameerror"></span><br>
+    Email : <input id="email" type="email" name="email" maxlength="30" />
+    <span style="color: red" id="emailerror"></span><br>
+    Set Password : <input id="password" type="password" name="password" minlength="8" maxlength="30" /><br>
+    <span style="color: green" id="usercreatedmsg"></span><br>
+    <button name="createUserButton" onclick="createUserClick()">Create User</button>
+    <a href="/loginPage"><button name="loginPageButton">Login Page</button></a>
+</div>
+</body>
+</html>

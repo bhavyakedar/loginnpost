@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>LoginNPost | Comments</title>
+</head>
+<script type="text/javascript">
+
+    async function postComment() {
+        newComment = document.getElementById("newComment").value;
+        var data = {
+            "comment":newComment
+        };
+        var output = await fetch('http://localhost:8888/getPostComments', {
+            method:'POST', headers:{
+                'Content-type': 'application/json'
+            },
+            body:JSON.stringify(data)
+        }).then (data=>data.json()).then(data=>{
+            console.log(data);
+            return data;
+        });
+        console.log(output);
+        document.getElementById("newComment").value = "";
+        fetchAllComments();
+    }
+    async function fetchAllComments() {
+        var output = await fetch('http://localhost:8888/getPostComments',{
+            method:'GET', headers:{
+                'Content-type': 'application/json'
+            }
+        }).then(data=>data.json())
+            .then(data=>{return data;});
+        console.log(output);
+        document.getElementById("name").innerText = output.currentUser.name;
+        var commentsArray = output.comments;
+        var commentsString = "";
+        for (let i = 0; i < commentsArray.length; i++){
+            commentsString += "[" + commentsArray[i].createdAt
+                + "] : " +commentsArray[i].username
+                + " : " + commentsArray[i].comment+"\n";
+        }
+        document.getElementById("commentsView").innerText = commentsString;
+        return output;
+    }
+    fetchAllComments();
+</script>
+<body>
+<h2>Welcome to LoginNPost, <span id="name"></span>!</h2><br>
+<a href="/logout"><button id="logoutButton">Logout</button></a>
+<a href="/myProfile"><button id="myProfileButton">My Profile</button></a>
+<br><br>
+New Comment : <input type="text" maxlength="1000" id="newComment" />
+<button id="postCommentButton" onclick="postComment()">Post Comment</button><br><br>
+<span id="commentsView"></span>
+</body>
+</html>
